@@ -1,12 +1,8 @@
 package com.arutech.mftracker.InvestmentService.service;
 
 import com.arutech.mftracker.InvestmentService.dto.*;
-import com.arutech.mftracker.InvestmentService.model.FundMetadata;
-import com.arutech.mftracker.InvestmentService.repository.FundMetadataRepository;
-import com.arutech.mftracker.InvestmentService.util.CosineSimilarity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,81 +23,27 @@ public class FundMetadataFetcherService {
     //    private static final String AMFI_SEARCH_URL = "https://api.mfapi.in/mf/search?q=";
     private static final String AMFI_API_URL = "https://api.mfapi.in/mf/";
     //    private static final String AMFI_API_LATEST_URL = "https://api.mfapi.in/mf/{scheme_code}/latest";
+
+    private static final String SEARCH_BASE_URL = "https://api.mfapi.in/mf/search?";
+
+
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private FundMetadataRepository mfSchemeRepository;
 
-    @PostConstruct
-    public void initializeMutualFunds() {
-        //fetchAndSaveMutualFunds();
-    }
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.objectMapper= new ObjectMapper();
     }
 
-    public void fetchAndSaveMutualFunds() {
-        List<FundMetadata> mutualFunds = extractNavData();
-        mfSchemeRepository.saveAll(mutualFunds);
-    }
 
-    public List<FundMetadata> extractNavData() {
-        String rawData = restTemplate.getForObject(AMFI_NAV_URL, String.class);
-        return parseNavData(rawData);
-    }
-
-    private List<FundMetadata> parseNavData(String rawData) {
-        List<FundMetadata> navDataList = new ArrayList<>();
-
-        if (rawData == null) {
-            return navDataList;
-        }
-        String[] lines = rawData.split("\n");
-        String currentFundHouse = null;
-
-        for (String line : lines) {
-            // Skip header or empty lines
-            if (line.trim().isEmpty() || line.startsWith("Scheme")) {
-                continue;
-            }
-
-            String[] fields = line.split(";");
-
-            // Lines without commas are fund house names
-            if (fields.length == 1) {
-                currentFundHouse = fields[0].trim();
-                continue;
-            }
-
-            // Process mutual fund data lines
-            if (fields.length >= 3 && currentFundHouse != null) {
-                try {
-                    FundMetadata navData = new FundMetadata();
-                    navData.setSchemeCode(fields[0].trim());
-                    navData.setSchemeName(fields[3].trim());
-                    navData.setIsin(fields[1].trim());
-                    navData.setIsinR(fields[2].trim());
-                    navData.setFundHouse(currentFundHouse);
-                    navDataList.add(navData);
-                } catch (Exception e) {
-                    // Optional: Log parsing errors
-                    log.warn("Error parsing line: " + line);
-                }
-            }
-        }
-
-        return navDataList;
-    }
 
     public MutualFundDetails fetchMutualFundDetails(String schemeCode) {
         String url = AMFI_API_URL + schemeCode;
-//        log.info(url);
         return restTemplate.getForObject(url, MutualFundDetails.class);
     }
 
@@ -112,7 +54,7 @@ public class FundMetadataFetcherService {
                 : null;
     }
 
-    private static final String SEARCH_BASE_URL = "https://api.mfapi.in/mf/search?";
+
 
     public List<SearchResult> searchMutualFunds(String query) {
         // Build URL with query parameter
@@ -146,17 +88,5 @@ public class FundMetadataFetcherService {
         }
     }
 
-    public static void main(String[] args) {
 
-        FundMetadataFetcherService service = new FundMetadataFetcherService();
-        service.setRestTemplate(new RestTemplate());
-        String query = "quant Active Fund".toLowerCase();
-        List<SearchResult> mutualFundSearchResults = service.searchMutualFunds("quant ac");
-        System.out.println("mutualFundSearchResults = " + mutualFundSearchResults);
-        for(SearchResult result : mutualFundSearchResults) {
-            double v = CosineSimilarity.positionalWeightedSimilarity(query, result.getSchemeName().toLowerCase());
-            System.out.println(query + " <> " + result.getSchemeName() + " is " + v);
-        }
-
-    }
 }

@@ -18,6 +18,7 @@ public class MFInstrument {
     private String amc;
     private String schemeType;
     private String tradingsymbol;
+    private String schemeCode;
     private String plan;
     private String settlementtype;
     private double lastPrice;

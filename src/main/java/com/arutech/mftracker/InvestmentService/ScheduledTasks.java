@@ -1,37 +1,39 @@
 package com.arutech.mftracker.InvestmentService;
 
 
-import com.arutech.mftracker.InvestmentService.model.FundMetadata;
 import com.arutech.mftracker.InvestmentService.model.MFInstrument;
 import com.arutech.mftracker.InvestmentService.model.Portfolio;
-import com.arutech.mftracker.InvestmentService.repository.FundMetadataRepository;
 import com.arutech.mftracker.InvestmentService.repository.InstrumentRepository;
 import com.arutech.mftracker.InvestmentService.repository.PortfolioRepository;
-import com.arutech.mftracker.InvestmentService.service.FundMetadataFetcherService;
+import com.arutech.mftracker.InvestmentService.service.MFInstrumentService;
 import com.arutech.mftracker.InvestmentService.util.CosineSimilarity;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
 @Slf4j
 public class ScheduledTasks {
-//    private final FundMetadataFetcherService mutualFundService;
-//
-//
-//    public ScheduledTasks(FundMetadataFetcherService mutualFundService) {
-//        this.mutualFundService = mutualFundService;
-//    }
-//
-//    @Scheduled(fixedRate = 3600000) // Run every hour (adjust as needed)
-//    public void fetchAndSaveMutualFunds() {
-//        log.info("Fetching all mutual fund details");
-//        mutualFundService.fetchAndSaveMutualFunds();
-//    }
+    private final MFInstrumentService mutualFundService;
+
+
+    public ScheduledTasks(MFInstrumentService mutualFundService) {
+        this.mutualFundService = mutualFundService;
+    }
+
+    @Scheduled(fixedRate = 3600000) // Run every hour (adjust as needed)
+    public void fetchAndSaveMutualFunds() {
+        log.info("Fetching all mutual fund details");
+        try {
+            mutualFundService.fetchAndStoreInstruments();
+        } catch (IOException e) {
+            log.warn("Error fetching mutual funds: {}", e.getMessage());
+        }
+    }
 
     /**
      * Every 2 minutes, look for portfolios without a scheme code,
@@ -59,6 +61,7 @@ public class ScheduledTasks {
                 portfolio.setTradingsymbol(instrument.getTradingsymbol());
                 portfolio.setCurrentValue(instrument.getLastPrice() * portfolio.getUnits());
                 portfolio.setLastUpdateDate(instrument.getLastPriceDate());
+                portfolio.setSchemeCode(instrument.getSchemeCode());
                 portfolioRepository.save(portfolio);
             }
 

@@ -1,6 +1,5 @@
 package com.arutech.mftracker.InvestmentService.repository;
 
-import com.arutech.mftracker.InvestmentService.model.FundMetadata;
 import com.arutech.mftracker.InvestmentService.model.MFInstrument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
