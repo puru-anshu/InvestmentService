@@ -4,12 +4,14 @@ import com.arutech.mftracker.InvestmentService.model.Investment;
 import com.arutech.mftracker.InvestmentService.model.Portfolio;
 import com.arutech.mftracker.InvestmentService.repository.InvestmentRepository;
 import com.arutech.mftracker.InvestmentService.repository.PortfolioRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class PortfolioService {
 
     @Autowired
@@ -20,7 +22,8 @@ public class PortfolioService {
     }
 
     public List<Portfolio> getUserPortfolio(String userId) {
-        return repository.findByUserIdAndUnitsGreaterThan(userId,0);
+        log.info("getting user portfolio for {}", userId);
+        return repository.findByUserIdAndUnitsGreaterThan(userId, 0);
     }
 
     public Portfolio updateInvestment(String userId, String investmentId, Portfolio portfolio) {
@@ -34,15 +37,18 @@ public class PortfolioService {
     }
 
     public void savePortfolio(String userId, List<Portfolio> portfolios) {
-        for(Portfolio portfolio : portfolios)
-        {
-            Portfolio folio = repository.findBySchemeNameAndFolioNumber(portfolio.getSchemeName(),portfolio.getFolioNumber());
-            if(null != folio){
+        for (Portfolio portfolio : portfolios) {
+            Portfolio folio = repository.findBySchemeNameAndFolioNumber(portfolio.getSchemeName(), portfolio.getFolioNumber());
+            if (null != folio) {
                 repository.delete(folio);
             }
             repository.save(portfolio);
 
         }
 
+    }
+
+    public List<Portfolio> getPortfoliosWithNullSchemeCode() {
+        return repository.findBySchemeCodeIsNull();
     }
 }

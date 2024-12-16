@@ -9,5 +9,9 @@ import java.util.List;
 public interface FundMetadataRepository extends JpaRepository<FundMetadata, String> {
     List<FundMetadata> findByFundHouseAndSchemeName(String fundHouse,String schemeName);
 
+    List<FundMetadata> findByFundHouse(String fundHouse);
+
+
+    List<FundMetadata> findByFundHouseIgnoreCase(String fundHouse);
 }
 

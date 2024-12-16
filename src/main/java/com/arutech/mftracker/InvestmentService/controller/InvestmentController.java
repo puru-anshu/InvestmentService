@@ -27,6 +27,12 @@ public class InvestmentController {
 
     }
 
+    @PostMapping("/batch")
+    public ResponseEntity<List<Investment>> createInvestments(@PathVariable String userId, @RequestBody List<Investment> investments) {
+         investmentService.saveInvestments(userId, investments);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @GetMapping
     public ResponseEntity<List<Investment>> getInvestmentsByUser(@PathVariable String userId) {
         List<Investment> investments = investmentService.getUserInvestments(userId);

@@ -23,6 +23,7 @@ public class PortfolioController {
 
     @GetMapping
     public ResponseEntity<List<Portfolio>> getPortfolioByUser(@PathVariable String userId) {
+//        userId ="test";
         List<Portfolio> investments = portfolioService.getUserPortfolio(userId);
         return ResponseEntity.ok(investments);
     }
