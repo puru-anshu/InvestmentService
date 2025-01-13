@@ -1,7 +1,6 @@
 package com.arutech.mftracker.InvestmentService.controller;
 
 import com.arutech.mftracker.InvestmentService.dto.MutualFundDetails;
-import com.arutech.mftracker.InvestmentService.dto.MutualFundSearchResult;
 import com.arutech.mftracker.InvestmentService.dto.NavData;
 import com.arutech.mftracker.InvestmentService.dto.SearchResult;
 import com.arutech.mftracker.InvestmentService.service.FundMetadataFetcherService;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
