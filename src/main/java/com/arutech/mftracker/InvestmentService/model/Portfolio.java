@@ -27,10 +27,11 @@ public class Portfolio {
     String amcName;
     String Category;
     String folioNumber;
-    int units;
+    double units;
     double investedValue;
     String schemeCode;
     String tradingsymbol;
     double currentValue;
     String lastUpdateDate;
+    double annualizedXIRR;
 }

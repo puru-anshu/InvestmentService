@@ -1,14 +1,13 @@
 package com.arutech.mftracker.InvestmentService.service;
 
-import com.arutech.mftracker.InvestmentService.model.Investment;
 import com.arutech.mftracker.InvestmentService.model.Portfolio;
-import com.arutech.mftracker.InvestmentService.repository.InvestmentRepository;
 import com.arutech.mftracker.InvestmentService.repository.PortfolioRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -50,5 +49,15 @@ public class PortfolioService {
 
     public List<Portfolio> getPortfoliosWithNullSchemeCode() {
         return repository.findBySchemeCodeIsNull();
+    }
+
+    public Optional<Portfolio> getPortfolioByFolio(String userId, String folioNumber) {
+        List<Portfolio> portfolios = getUserPortfolio(userId).stream()
+                .filter(portfolio -> portfolio.getFolioNumber().equals(folioNumber)).toList();
+        if (!portfolios.isEmpty())
+            return Optional.of(portfolios.get(0));
+        else
+           return Optional.empty();
+
     }
 }

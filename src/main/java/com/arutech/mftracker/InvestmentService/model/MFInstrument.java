@@ -16,6 +16,7 @@ public class MFInstrument {
     private String id; // Assuming 'id' is present and unique for each instrument
     private String name;
     private String amc;
+    private String amcCode;
     private String schemeType;
     private String tradingsymbol;
     private String schemeCode;

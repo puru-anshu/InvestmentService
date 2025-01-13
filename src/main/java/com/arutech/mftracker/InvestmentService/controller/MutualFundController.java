@@ -1,7 +1,7 @@
 package com.arutech.mftracker.InvestmentService.controller;
 
-import com.arutech.mftracker.InvestmentService.dto.MutualFundDetails;
 import com.arutech.mftracker.InvestmentService.exception.MutualFundNotFoundException;
+import com.arutech.mftracker.InvestmentService.model.MFInstrument;
 import com.arutech.mftracker.InvestmentService.service.MutualFundService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class MutualFundController {
     private final MutualFundService mutualFundService;
 
+
     public MutualFundController(MutualFundService mutualFundService) {
         this.mutualFundService = mutualFundService;
     }
 
     @GetMapping("/{tradingSymbol}")
-    public ResponseEntity<MutualFundDetails> getMutualFundDetails(@PathVariable String tradingSymbol) {
+    public ResponseEntity<MFInstrument> getMutualFundDetails(@PathVariable String tradingSymbol) {
         try {
-            MutualFundDetails mutualFundDetails = mutualFundService.getMutualFundDetails(tradingSymbol);
-            return ResponseEntity.ok(mutualFundDetails);
+            MFInstrument instrument = mutualFundService.getMutualFundDetails(tradingSymbol);
+            return ResponseEntity.ok(instrument);
         } catch (MutualFundNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }

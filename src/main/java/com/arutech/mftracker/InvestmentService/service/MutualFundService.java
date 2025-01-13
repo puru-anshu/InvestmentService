@@ -1,19 +1,21 @@
 package com.arutech.mftracker.InvestmentService.service;
 
-import com.arutech.mftracker.InvestmentService.dto.MutualFundDetails;
 import com.arutech.mftracker.InvestmentService.exception.MutualFundNotFoundException;
+import com.arutech.mftracker.InvestmentService.model.MFInstrument;
+import com.arutech.mftracker.InvestmentService.repository.InstrumentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MutualFundService {
-    private RestTemplate restTemplate;
+    private InstrumentRepository repository;
 
-    public MutualFundService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public MutualFundService(InstrumentRepository repository) {
+        this.repository = repository;
     }
 
-    public MutualFundDetails getMutualFundDetails(String tradingSymbol) throws MutualFundNotFoundException {
-        return null;
+    public MFInstrument getMutualFundDetails(String tradingSymbol) throws MutualFundNotFoundException {
+       return repository.findByTradingsymbol(tradingSymbol);
     }
+
+
 }

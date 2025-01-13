@@ -1,10 +1,5 @@
 package com.arutech.mftracker.InvestmentService.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.arutech.mftracker.InvestmentService.model.Investment;
 import com.arutech.mftracker.InvestmentService.model.Portfolio;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +7,11 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -51,10 +51,10 @@ public class InvestmentExtractionService {
                 investment.setUserId(userId);
                 investment.setSchemeName(row.getCell(0).getStringCellValue());
                 investment.setTransactionDescription(row.getCell(1).getStringCellValue());
-                investment.setDate(row.getCell(2).getStringCellValue());
-                investment.setNav(cellValue(row.getCell(3)));
-                investment.setUnits(row.getCell(4).getStringCellValue());
-                investment.setAmount(row.getCell(5).getStringCellValue());
+//                investment.setDate(row.getCell(2).getStringCellValue());
+//                investment.setNav(cellValue(row.getCell(3)));
+//                investment.setUnits(row.getCell(4).getStringCellValue());
+//                investment.setAmount(row.getCell(5).getStringCellValue());
 
                 investments.add(investment);
             }

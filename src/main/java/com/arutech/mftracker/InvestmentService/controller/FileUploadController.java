@@ -1,8 +1,7 @@
 package com.arutech.mftracker.InvestmentService.controller;
 
-import com.arutech.mftracker.InvestmentService.model.Investment;
 import com.arutech.mftracker.InvestmentService.model.Portfolio;
-import com.arutech.mftracker.InvestmentService.service.InvestmentExtractionService;
+import com.arutech.mftracker.InvestmentService.service.CASInvestmentExtractionService;
 import com.arutech.mftracker.InvestmentService.service.InvestmentService;
 import com.arutech.mftracker.InvestmentService.service.PortfolioService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,24 +16,19 @@ import java.util.List;
 @RequestMapping("/users/{userId}/upload")
 @Slf4j
 public class FileUploadController {
-    private final InvestmentExtractionService investmentExtractionService;
-    private final InvestmentService investmentService;
+    private final CASInvestmentExtractionService investmentExtractionService;
     private final PortfolioService portfolioService;
 
-    public FileUploadController(InvestmentExtractionService investmentExtractionService,
+    public FileUploadController(CASInvestmentExtractionService investmentExtractionService,
                                 InvestmentService investmentService , PortfolioService portfolioService) {
         this.investmentExtractionService = investmentExtractionService;
-        this.investmentService = investmentService;
         this.portfolioService =portfolioService;
     }
 
     @PostMapping
     public ResponseEntity<Void> uploadFile(@PathVariable String userId, @RequestParam("file") MultipartFile file) {
-        log.info("Saving investments details ");
-        List<Investment> investments = investmentExtractionService.extractInvestmentsFromExcel(userId, file);
-        investmentService.saveInvestments(userId, investments);
-        log.info("saving portfolios ");
         List<Portfolio> portfolios = investmentExtractionService.extractPortfolioFromExcel(userId,file);
+        log.info("saved {} portfolios",portfolios.size());
         portfolioService.savePortfolio(userId,portfolios);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

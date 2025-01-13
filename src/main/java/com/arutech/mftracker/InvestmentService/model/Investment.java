@@ -3,11 +3,7 @@ package com.arutech.mftracker.InvestmentService.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDate;
 
 
 @Document
@@ -23,15 +19,19 @@ public class Investment {
     private String investmentId;
     private String userId;
     private String schemeName;
-//    private String amcName;
-//    private String category;
-//    private String folioNo;
-//    private double investedValue;
-//    private double currentValue;
-//    private double returns;
-    private String units;
+    private String folioNumber;
+    private String productCode;
+    private String amcName;
+    private String fundType;
+    private String tradeDate;
+    private String transactionType;
+    private double amount;
+    private double units;
+    private double price;
+    private String brokerName;
     private String transactionDescription;
-    private String date;
-    private String nav;
-    private String amount;
+    private String investorName;
+    private String PAN;
+    private String broker;
+
 }
